@@ -1,6 +1,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from single_memristor import SingleMemristor
+import sys
+import os
+
+# Add parent directory to path so we can import memsim
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from memsim.device import SingleMemristor
 
 def generate_spike(t, trigger_time, amp, tau=0.01):
     # Mimics a biological Action Potential (Shark Fin shape)
@@ -26,7 +32,6 @@ def main_stdp():
     time = np.arange(0, sim_duration, dt)
     
     # Initialize Memristor
-    # Initialize Memristor at Middle State
     # (So we can see it go up or down)
     synapse = SingleMemristor(R_on=100, R_off=16000, D=10e-9, mu=10e-14)
     synapse.x = 0.5
@@ -62,6 +67,11 @@ def main_stdp():
 
 
     # Plotting
+    
+    # Ensure results directory exists
+    results_dir = os.path.join(os.path.dirname(__file__), '..', 'results')
+    os.makedirs(results_dir, exist_ok=True)
+
     plt.figure(figsize=(10, 8))
     
     # Top: The Neuron Spikes
@@ -79,6 +89,7 @@ def main_stdp():
     plt.title("Synaptic Weight Evolution (State 'x')")
     plt.ylabel("Dopant Width (x)")
     plt.grid(True)
+    plt.savefig(os.path.join(results_dir, "stdp_asymmetry.png"))
     
     # Annotate the result
     start_x = state_log[0]
@@ -88,7 +99,8 @@ def main_stdp():
     print(f"Start x: {start_x:.4f} | End x: {end_x:.4f} | Change: {change:.4e} ({result_text})")
     
     plt.tight_layout()
-    plt.show()
+    # plt.show() # Commented out for batch execution
+    print(f"Plot saved to {os.path.join(results_dir, 'stdp_asymmetry.png')}")
 
 if __name__ == "__main__":
     main_stdp()
