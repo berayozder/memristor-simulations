@@ -10,7 +10,7 @@ class SingleMemristor:
         self.k = mu * R_on / (D**2) # Constant from Strukov's paper
         # State var
         # x represents how "open" the channel is (0 to 1)
-        self.x = 0.1
+        self.x = 0.5
         # When x is near 0, the memristor is in the high resistance state (R_off)
         # When x is near 1, the memristor is in the low resistance state (R_on)
         
